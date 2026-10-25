@@ -143,7 +143,7 @@ public class git {
             }
 
             // Preserve entries for other file paths.
-            if (!line.endsWith(" " + relativePath)) {
+            if (!line.endsWith(" " + relativePath) || line.equals(entry)) {
                 if (!newIndex.isEmpty()) {
                     newIndex += "\n";
                 }
@@ -194,19 +194,22 @@ public class git {
 
                     int lastSlash = fullFilePath.lastIndexOf("/");
 
+
+                    String parentDirectory = "";
+                    String fileOrFolderName = fullFilePath;
+
                     if (lastSlash != -1) {
-                        String parentDirectory = fullFilePath.substring(0, lastSlash);
-                        String fileOrFolderName = fullFilePath.substring(lastSlash + 1);
-
-                        if (parentDirectory.equals(dirPath)) {
-                            if (treeFileContents.equals("") == false) {
-                                treeFileContents = treeFileContents + "\n";
-                            }
-
-                            treeFileContents = treeFileContents
-                                    + fileType + " " + fileHash + " " + fileOrFolderName;
-                        }
+                        parentDirectory = fullFilePath.substring(0, lastSlash);
+                        fileOrFolderName = fullFilePath.substring(lastSlash + 1);
                     }
+
+                    if (parentDirectory.equals(dirPath)) {
+                        if (treeFileContents.equals("") == false) {
+                            treeFileContents = treeFileContents + "\n";
+                        }
+                        
+                        treeFileContents = treeFileContents + fileType + " " + fileHash + " " + fileOrFolderName;
+                        }
                 }
             }
 
