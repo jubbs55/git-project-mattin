@@ -105,14 +105,9 @@ public class git {
         try {
             String hash = hashFile(filePath);
             // System.out.println(hash); // test line
-            FileWriter blobWriter = new FileWriter("git/objects/" + hash);
-            BufferedReader OGFileReader = new BufferedReader(new FileReader(filePath));
-            String blob = OGFileReader.readLine();
-            // System.out.println(blob); // test line
-            OGFileReader.close();
+            byte[] content = Files.readAllBytes(Path.of(filePath));
+            Files.write(Path.of("git/objects/" + hash), content);
 
-            blobWriter.write(blob);
-            blobWriter.close();
             updateIndex(filePath);
         } catch (IOException e) {
             System.out.println("File error: " + e.getMessage());

@@ -1,0 +1,1 @@
+For fixing the createblob I had to make sure the file reader in create blob read every line and it initially didnt because he used readLine but I switched to the same way as in fileHasher with readAllBytes.
