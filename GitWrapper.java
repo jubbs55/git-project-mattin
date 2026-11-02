@@ -1,13 +1,6 @@
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
-import java.util.Date;
 
 public class GitWrapper {
 
@@ -62,16 +55,6 @@ public class GitWrapper {
      * @return The SHA-1 hash of the new commit.
      */
     public static String commit(String author, String message) {
-        
-    }
-
-    /**
-     * EXTRA CREDIT: Restores the working directory to the state of a specific commit.
-     * Traces the commit's root tree and recreates all files and directories.
-     *
-     * @param commitHash The SHA-1 hash of the commit to check out.
-     */
-    public static void checkout(String commitHash) {
-        // implement here
+        return git.commit(author, message);
     }
 }
