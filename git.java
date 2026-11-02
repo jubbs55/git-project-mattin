@@ -8,6 +8,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.HexFormat;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Date;
 
 public class git {
 
@@ -396,6 +397,48 @@ public class git {
         }
 
         return result;
+    }
+
+    public static String commit(String author, String message) { 
+        try {
+            String rootTreeHash = buildRootTree();
+            if (rootTreeHash.isEmpty()) { 
+                throw new IOException("Couldn't make the root tree yo (shouldn't happen)");
+            }
+
+            String papaHash = Files.readString(Path.of("git/HEAD")).trim();
+
+            String commitString = "tree: " + rootTreeHash + "\n";
+            if (!papaHash.equals("")) { 
+                commitString += "parent: " + papaHash + "\n";
+            }
+            commitString += "author: "  + author + "\ndate: " + new Date() + "\nmessage: " + message;
+
+            FileWriter temporaryFileWriter = new FileWriter("git/commitTemp");
+            temporaryFileWriter.write(commitString);
+            temporaryFileWriter.close();
+
+            String commitHash = hashFile("git/commitTemp");
+
+            File temporaryFile = new File("git/commitTemp");
+            temporaryFile.delete();
+
+            FileWriter commitWriter = new FileWriter("git/objects/" + commitHash);
+            commitWriter.write(commitString);
+            commitWriter.close();
+
+            FileWriter headWriter = new FileWriter("git/HEAD");
+            headWriter.write(commitHash);
+            headWriter.close();
+
+            return commitHash;  
+
+        } catch (Exception e) { 
+            System.out.println("Error with Commitment");
+            e.printStackTrace();
+            return "Error";
+        }
+
     }
 
 }
